@@ -29,4 +29,4 @@ class TikTokDownloader:
 
     def get_video_url(self) -> str:
         response = requests.get(self.__url, cookies=self.__cookies, headers=TikTokDownloader.HEADERS)
-        return response.content.decode("utf-8").split('"playAddr":"')[1].split('"')[0].replace(r'\u0026', '&').replace('\u002F', '/')
+        return response.content.decode("utf-8").split('"playAddr":"')[1].split('"')[0].replace(r'\u0026', '&').replace(r'\u002F', '/')
