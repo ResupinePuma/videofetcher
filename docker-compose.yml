@@ -1,11 +1,11 @@
 version: "3.3"
 
 services:
-  ttr:  
+  vf:  
     container_name: videofetcher
     build:
       context: .
-    image: ttr-bot
+    image: vf-bot
     command: bash
     restart: always
     volumes:
