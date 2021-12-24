@@ -1,0 +1,5 @@
+requests
+telegram
+python-telegram-bot
+yt-dlp
+speedtest_cli

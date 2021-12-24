@@ -1,0 +1,14 @@
+version: "3.3"
+
+services:
+  ttr:  
+    container_name: videofetcher
+    build:
+      context: .
+    image: ttr-bot
+    command: bash
+    restart: always
+    volumes:
+      - /tmp/videofetcher:/code/output_dir
+      - ./videofetcher:/code
+
