@@ -25,7 +25,6 @@ class VideoProvider:
         tiktok = re.findall(r"\/\/.*\.tiktok\.com\/",link)
 
         if len(tiktok) > 0:
-            logging.error(1)
             tt = TikTokDownloader(link, str(random.randint(111111111111, 99999999999999)))            
             return "tiktok", tt.get_video_url()
         return "any", link
