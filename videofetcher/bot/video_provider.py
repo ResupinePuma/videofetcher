@@ -4,7 +4,7 @@ import yt_dlp as yt
 from bot.tiktok import TikTokDownloader
 
 from bot.extraction_params import create_extraction_params
-from bot.exceptions import FileIsTooLargeException
+from bot.exceptions import *
 from bot.telegram_notifier import TelegramNotifier
 from telegram import ParseMode
 
@@ -22,14 +22,12 @@ class VideoProvider:
         self.video_info = None
 
     def __type_detect(self, link):
-        tiktok = re.findall(r"^(http|https):\/\/.*\.tiktok\.com\/",link)
+        tiktok = re.findall(r"\/\/.*\.tiktok\.com\/",link)
 
-        logging.error(tiktok)
         if len(tiktok) > 0:
             logging.error(1)
             tt = TikTokDownloader(link, str(random.randint(111111111111, 99999999999999)))            
             return "tiktok", tt.get_video_url()
-        logging.error(2)
         return "any", link
 
 
@@ -38,19 +36,20 @@ class VideoProvider:
         yt_downloader = yt.YoutubeDL({"socket_timeout": 10})
         src_link = video_link
         type = "any"
-        try:
-            type, video_link = self.__type_detect(video_link)
-        except:
-            return False
-
-        self.video_info = yt_downloader.extract_info(video_link, download=False)
-        if (not text):
-            text = self.video_info.get('title', "")
-            if type == "tiktok":
-                text = src_link
-        notifier.progress_update("‍🤖 processing video")
         
         try:
+            type, video_link = self.__type_detect(video_link)
+            try:
+                self.video_info = yt_downloader.extract_info(video_link, download=False)
+            except:
+                raise UrlException()
+                
+            if (not text):
+                text = self.video_info.get('title', "")
+                if type == "tiktok":
+                    text = src_link
+            notifier.progress_update("‍🤖 processing video")
+
             for yt_video in self.yt_videos():
                 logging.info("Processing Video -> {}".format(yt_video.info.get("id")))
                 request_handler = create_extraction_params(notifier, yt_video.info.get("id"))
@@ -75,15 +74,21 @@ class VideoProvider:
                     )
         except FileIsTooLargeException as e:
             file_too_large_error = "[File Is Too Large] {}".format(str(e))
-            logging.error(file_too_large_error)
-            self.bot.send_message(self.chat_id, file_too_large_error, disable_web_page_preview=True)
-            return False
+            # logging.error(file_too_large_error)
+            # self.bot.send_message(self.chat_id, file_too_large_error, disable_web_page_preview=True)
+            return False, file_too_large_error
+        except TiktokUrlException as e:
+            return False, str(e)
+        except DownloadError as e:
+            return False, str(e)
+        except UrlException as e:
+            return False, str(e)
         except Exception as ex:
             logging.error(ex)
-            return False
+            return False, "We'll have a look and try to fix this issue."
 
         notifier.progress_update("Done! ✅")
-        return True
+        return True, ""
 
     def yt_videos(self):
         if not self.is_yt_playlist():

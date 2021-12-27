@@ -35,19 +35,19 @@ class GenericMessageHandler:
         reply_message = bot.send_message(
             cid, "Got {}. 👀 at 📼".format(video_link), disable_web_page_preview=True,
         )
-        task_completed = video_provider.process(video_link, reply_message.message_id, description)
+        task_completed, status_msg = video_provider.process(video_link, reply_message.message_id, description)
         if task_completed:
             bot.delete_message(cid, original_message_id)
             bot.delete_message(cid, reply_message.message_id)
             logging.info("Finished processing {}".format(video_link))
         else:
             logging.error(
-                "Error processing request for {} and video link: {}".format(
-                    cid, video_link
+                "Error processing request for {} and video link: {}. Error: {}".format(
+                    cid, video_link, status_msg
                 ),
             )
             bot.delete_message(cid, reply_message.message_id)
             bot.send_message(cid,
                              "🆘 Looks like something went wrong. "
-                             "\nWe'll have a look and try to fix this issue."
+                             "\n" + status_msg
                              )

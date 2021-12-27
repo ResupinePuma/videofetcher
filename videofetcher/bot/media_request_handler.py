@@ -3,7 +3,7 @@ import os, hashlib
 
 import yt_dlp as yt
 
-from bot.exceptions import FileIsTooLargeException
+from bot.exceptions import *
 from common.helper import format_size, rename_file
 from config.bot_config import PREFERRED_AUDIO_CODEC, AUDIO_OUTPUT_DIR
 
@@ -33,7 +33,10 @@ class MediaRequestHandler:
     def process_video(self, yt_video):
         self.video_info = yt_video
         ydl = yt.YoutubeDL(self.extraction_param)
-        ydl.download([self.video_url()])
+        try:
+            ydl.download([self.video_url()])
+        except:
+            raise DownloadError("Can't download video from this url")
         downloaded_filename = self.get_downloaded_file_abspath()
         file_size = os.path.getsize(downloaded_filename)
         formatted_file_size = format_size(file_size)
