@@ -78,7 +78,8 @@ class VideoProvider:
             logging.error(file_too_large_error)
             self.bot.send_message(self.chat_id, file_too_large_error, disable_web_page_preview=True)
             return False
-        except:
+        except Exception as ex:
+            logging.error(ex)
             return False
 
         notifier.progress_update("Done! ✅")

@@ -41,10 +41,11 @@ class MediaRequestHandler:
         self.notifier.progress_update(downloaded_video_message)
         logging.info(downloaded_video_message)
 
-        filename = rename_file(
-            self.get_downloaded_file_abspath(),
-            "{0}_{1}".format(self.video_title(), self.video_timestamp()),
-        )
+        filename = self.get_downloaded_file_abspath()
+        #rename_file(
+        #     self.get_downloaded_file_abspath(),
+        #     "{0}".format(hashlib.md5(self.video_id().encode("utf-8")).hexdigest() + "." + PREFERRED_AUDIO_CODEC),
+        # )
 
         # if the extracted audio file is larger than 50M
         allowed_file_size = 50

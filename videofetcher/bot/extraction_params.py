@@ -1,5 +1,5 @@
 from bot.media_request_handler import MediaRequestHandler
-from config.bot_config import OUTPUT_FORMAT, AUDIO_OUTPUT_DIR
+from config.bot_config import OUTPUT_FORMAT, AUDIO_OUTPUT_DIR, PREFERRED_AUDIO_CODEC
 import speedtest, hashlib, os
 
 s = speedtest.Speedtest()
@@ -9,11 +9,11 @@ s.download()
 print(s.results.dict()['download'])
 
 def gethashname(name):
-    return hashlib.md5(name.encode("utf-8")).hexdigest()
+    return hashlib.md5(name.encode("utf-8")).hexdigest() + "." + PREFERRED_AUDIO_CODEC
 
 def GetExtractParams(id):
     return {
-        "outtmpl": os.path.join(AUDIO_OUTPUT_DIR, gethashname(id)+".mp4"),
+        "outtmpl": os.path.join(AUDIO_OUTPUT_DIR, gethashname(id)),
         "format": "best[height<=960][ext=mp4],best[ext=unknown_video],bestvideo[height<=480][ext=mp4]+worstaudio[ext=m4a]",
         "socket_timeout": 10,
         "throttled-rate" : s.results.dict()['download'],
