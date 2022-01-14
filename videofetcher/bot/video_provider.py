@@ -1,6 +1,7 @@
 import logging
 import os,re, random
 import yt_dlp as yt
+import timeout_decorator
 from bot.tiktok import TikTokDownloader
 
 from bot.extraction_params import create_extraction_params
@@ -30,6 +31,7 @@ class VideoProvider:
         return "any", link
 
 
+    @timeout_decorator.timeout(30, use_signals=False)
     def process(self, video_link, update_message_id, text=""):
         notifier = TelegramNotifier(self.bot, self.chat_id, update_message_id)
         yt_downloader = yt.YoutubeDL({"socket_timeout": 10})

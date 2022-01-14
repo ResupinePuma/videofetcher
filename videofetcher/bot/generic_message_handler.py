@@ -35,7 +35,10 @@ class GenericMessageHandler:
         reply_message = bot.send_message(
             cid, "Got {}. 👀 at 📼".format(video_link), disable_web_page_preview=True,
         )
-        task_completed, status_msg = video_provider.process(video_link, reply_message.message_id, description)
+        try:
+            task_completed, status_msg = video_provider.process(video_link, reply_message.message_id, description)
+        except:
+            task_completed, status_msg = False, "Timeout. Try again"
         if task_completed:
             bot.delete_message(cid, original_message_id)
             bot.delete_message(cid, reply_message.message_id)
