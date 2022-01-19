@@ -6,9 +6,8 @@ services:
     build:
       context: .
     image: vf-bot
-    command: bash
     restart: always
     volumes:
-      - /tmp/videofetcher:/code/output_dir
+      #- /tmp/videofetcher:/code/output_dir
       - ./videofetcher:/code
 
