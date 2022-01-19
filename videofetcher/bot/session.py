@@ -24,7 +24,7 @@ class PSession(requests.Session):
                     self.working_proxy_list.append(kwargs["proxy"])
                     self.results.append(response)
             except Exception as ex:
-                print(ex)
+                #print(ex)
                 pass
         queue.task_done()
 
