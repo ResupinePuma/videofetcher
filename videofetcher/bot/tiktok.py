@@ -38,11 +38,11 @@ class TikTokDownloader:
             return response
 
     def get_video_url(self) -> str:
-        session = PSession()
+        #session = PSession()
         if len(re.findall(r'(.*tiktok\.com\/@.*\/live)', self.__url)) > 0:
             raise TiktokUrlException("Can't download tiktok live stream. Try another url")
         for _ in range(3):
-            response = session.get(self.__url, filter=self.filter, headers=TikTokDownloader.HEADERS, timeout=5)
+            response = requests.get(self.__url, headers=TikTokDownloader.HEADERS, timeout=10)
             matches = re.findall(r'"playAddr":"([a-zA-Z0-9:.\/\\.:&-=?%_]*)"', response.text)
             if len(matches) > 1 or len(matches) == 0:
                 continue
