@@ -4,7 +4,7 @@ import yt_dlp as yt
 import timeout_decorator
 from bot.tiktok import TikTokDownloader
 
-from bot.extraction_params import create_extraction_params
+from bot.extraction_params import create_extraction_params, proxies_session
 from bot.exceptions import *
 from bot.telegram_notifier import TelegramNotifier
 from telegram import ParseMode
@@ -26,12 +26,12 @@ class VideoProvider:
         tiktok = re.findall(r"\/\/.*\.tiktok\.com\/",link)
 
         if len(tiktok) > 0:
-            tt = TikTokDownloader(link, str(random.randint(111111111111, 99999999999999)))            
+            tt = TikTokDownloader(link, str(random.randint(111111111111, 99999999999999)), proxies_session)            
             return "tiktok", tt.get_video_url()
         return "any", link
 
 
-    @timeout_decorator.timeout(30, use_signals=False)
+    @timeout_decorator.timeout(60, use_signals=False)
     def process(self, video_link, update_message_id, text=""):
         notifier = TelegramNotifier(self.bot, self.chat_id, update_message_id)
         yt_downloader = yt.YoutubeDL({"socket_timeout": 10})

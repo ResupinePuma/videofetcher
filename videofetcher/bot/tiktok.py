@@ -3,9 +3,6 @@ from urllib.parse import parse_qsl, urlparse
 import requests
 
 from bot.exceptions import TiktokUrlException
-from bot.session import PSession
-
-
 
 class TikTokDownloader:
     HEADERS = {
@@ -26,8 +23,9 @@ class TikTokDownloader:
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:96.0) Gecko/20100101 Firefox/96.0",
     }
 
-    def __init__(self, url: str, web_id: str):
+    def __init__(self, url: str, web_id: str, session=requests.Session()):
         self.__url = url
+        self.session = session
         self.__cookies = {
             'tt_webid': web_id,
             'tt_webid_v2': web_id
@@ -38,11 +36,10 @@ class TikTokDownloader:
             return response
 
     def get_video_url(self) -> str:
-        #session = PSession()
         if len(re.findall(r'(.*tiktok\.com\/@.*\/live)', self.__url)) > 0:
             raise TiktokUrlException("Can't download tiktok live stream. Try another url")
         for _ in range(3):
-            response = requests.get(self.__url, headers=TikTokDownloader.HEADERS, timeout=10)
+            response = self.session.get(self.__url, headers=TikTokDownloader.HEADERS, timeout=10)
             matches = re.findall(r'"playAddr":"([a-zA-Z0-9:.\/\\.:&-=?%_]*)"', response.text)
             if len(matches) > 1 or len(matches) == 0:
                 continue

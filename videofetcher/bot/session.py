@@ -16,6 +16,7 @@ class PSession(requests.Session):
     async def __request(self, name, queue):
         method, url, kwargs = await queue.get()
         async with aiohttp.ClientSession() as session:
+            session.cookie_jar.update_cookies(self.cookies)
             try:
                 async with session.request(method, url, **kwargs) as response:
                     #print(f"{name} Status:", response.status)               
@@ -48,20 +49,30 @@ class PSession(requests.Session):
         return self.results
 
 
-    def get(self, url, filter=None, **kwargs):
+    def get(self, url, filter=None, attempt=0, **kwargs):
         ress = self.request("GET", url, **kwargs)
         if filter:
             ress = [filter(r) for r in ress if r]
         if len(ress) > 0:
             ress = ress[0]
+            self.cookies = ress.cookies
+        elif attempt < 3:
+            ress = self.get(url, filter, attempt, **kwargs)
+        else:                
+            ress = None
         return ress
 
-    def post(self, url, filter=None, **kwargs):
+    def post(self, url, filter=None, attempt=0, **kwargs):
         ress = self.request("POST", url, **kwargs)
         if filter:
             ress = [filter(r) for r in ress if r]
         if len(ress) > 0:
             ress = ress[0]
+            self.cookies = ress.cookies
+        elif attempt < 3:
+            ress = self.post(url, filter, attempt, **kwargs)
+        else:                
+            ress = None
         return ress
 
 if __name__ == "__main__":

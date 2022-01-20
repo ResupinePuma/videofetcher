@@ -1,10 +1,13 @@
 from bot.media_request_handler import MediaRequestHandler
 from config.bot_config import OUTPUT_FORMAT, AUDIO_OUTPUT_DIR, PREFERRED_AUDIO_CODEC
 import speedtest, hashlib, os
+from bot.session import PSession
 
 s = speedtest.Speedtest()
 s.get_best_server()
 s.download()
+
+proxies_session = PSession()
 
 print(s.results.dict()['download'])
 
