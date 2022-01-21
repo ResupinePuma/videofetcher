@@ -56,8 +56,8 @@ class PSession(requests.Session):
         if len(ress) > 0:
             ress = ress[0]
             self.cookies = ress.cookies
-        elif attempt < 5:
-            ress = self.get(url, filter, attempt, **kwargs)
+        # elif attempt < 5:
+        #     ress = self.get(url, filter, attempt, **kwargs)
         else:                
             ress = None
         return ress
@@ -69,8 +69,8 @@ class PSession(requests.Session):
         if len(ress) > 0:
             ress = ress[0]
             self.cookies = ress.cookies
-        elif attempt < 5:
-            ress = self.post(url, filter, attempt, **kwargs)
+        # elif attempt < 5:
+        #     ress = self.post(url, filter, attempt, **kwargs)
         else:                
             ress = None
         return ress

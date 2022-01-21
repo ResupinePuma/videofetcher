@@ -1,6 +1,7 @@
 import os, re
 from urllib.parse import parse_qsl, urlparse
 import requests
+from bot.telegram_notifier import TelegramNotifier 
 
 from bot.exceptions import TiktokUrlException
 
@@ -35,14 +36,17 @@ class TikTokDownloader:
         if response.status <= 200:
             return response
 
-    def get_video_url(self) -> str:
+    def get_video_url(self, notifier : TelegramNotifier) -> str:
         if len(re.findall(r'(.*tiktok\.com\/@.*\/live)', self.__url)) > 0:
             raise TiktokUrlException("Can't download tiktok live stream. Try another url")
-        for _ in range(3):
-            response = self.session.get(self.__url, headers=TikTokDownloader.HEADERS, timeout=10)
+        for i in range(10):
+            notifier.set_progress_bar(i*10)
+            response = self.session.get(self.__url, headers=TikTokDownloader.HEADERS, timeout=8)
             matches = re.findall(r'"playAddr":"([a-zA-Z0-9:.\/\\.:&-=?%_]*)"', response.text)
             if len(matches) > 1 or len(matches) == 0:
+                self.session.proxy_list = self.session.get_proxy_list()
                 continue
+            notifier.set_progress_bar(100)
             return matches[0].replace(r'\u0026', '&').replace(r'\u002F', '/')
         raise TiktokUrlException()
     
