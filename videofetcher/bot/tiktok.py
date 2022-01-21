@@ -43,6 +43,10 @@ class TikTokDownloader:
         for i in range(10):
             notifier.set_progress_bar(i*10)
             response = self.session.get(self.__url, headers=TikTokDownloader.HEADERS, timeout=8)
+            if not response:
+                self.session.cookies=CookieJar()
+                self.session.proxy_list = self.session.get_proxy_list()
+                continue
             matches = re.findall(r'"playAddr":"([a-zA-Z0-9:.\/\\.:&-=?%_]*)"', response.text)
             if len(matches) > 1 or len(matches) == 0:
                 self.session.cookies=CookieJar()
