@@ -4,6 +4,7 @@ import requests
 from bot.telegram_notifier import TelegramNotifier 
 
 from bot.exceptions import TiktokUrlException
+from aiohttp import CookieJar
 
 class TikTokDownloader:
     HEADERS = {
@@ -44,8 +45,10 @@ class TikTokDownloader:
             response = self.session.get(self.__url, headers=TikTokDownloader.HEADERS, timeout=8)
             matches = re.findall(r'"playAddr":"([a-zA-Z0-9:.\/\\.:&-=?%_]*)"', response.text)
             if len(matches) > 1 or len(matches) == 0:
+                self.session.cookies=CookieJar()
                 self.session.proxy_list = self.session.get_proxy_list()
                 continue
+
             notifier.set_progress_bar(100)
             return matches[0].replace(r'\u0026', '&').replace(r'\u002F', '/')
         raise TiktokUrlException()
