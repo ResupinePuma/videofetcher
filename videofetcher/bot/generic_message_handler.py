@@ -1,5 +1,5 @@
 import logging
-import re
+import re, time
 
 
 from telegram.ext import MessageHandler, Filters
@@ -49,6 +49,7 @@ class GenericMessageHandler:
                     cid, video_link, status_msg
                 ),
             )
+            time.sleep(3)
             bot.delete_message(cid, reply_message.message_id)
             bot.send_message(cid,
                              "🆘 Looks like something went wrong. "

@@ -48,6 +48,7 @@ class VideoProvider:
             except:
                 raise UrlException()
             notifier.set_progress_bar(100)
+            notifier.rm_progress_bar()
                 
             if (not text):
                 text = self.video_info.get('title', "")

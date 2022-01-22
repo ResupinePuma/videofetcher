@@ -6,23 +6,24 @@ from bot.telegram_notifier import TelegramNotifier
 from bot.exceptions import TiktokUrlException
 from aiohttp import CookieJar
 
+
 class TikTokDownloader:
     HEADERS = {
-        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
-        "Accept-Encoding": "gzip, deflate, br",
-        "Accept-Language": "ru-RU,ru;q=0.8,en-US;q=0.5,en;q=0.3",
-        "Cache-Control": "no-cache",
-        "Connection": "keep-alive",
-        "DNT": "1",
-        # "Host": "vm.tiktok.com",
-        "Pragma": "no-cache",
-        "Sec-Fetch-Dest": "document",
-        "Sec-Fetch-Mode": "navigate",
-        "Sec-Fetch-Site": "none",
-        "Sec-Fetch-User": "?1",
-        "Upgrade-Insecure-Requests": "1",
-        "TE": "trailers",
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:96.0) Gecko/20100101 Firefox/96.0",
+        # "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
+        # "Accept-Encoding": "gzip, deflate, br",
+        # "Accept-Language": "ru-RU,ru;q=0.8,en-US;q=0.5,en;q=0.3",
+        # "Cache-Control": "no-cache",
+        # "Connection": "keep-alive",
+        # "DNT": "1",
+        # # "Host": "vm.tiktok.com",
+        # "Pragma": "no-cache",
+        # "Sec-Fetch-Dest": "document",
+        # "Sec-Fetch-Mode": "navigate",
+        # "Sec-Fetch-Site": "none",
+        # "Sec-Fetch-User": "?1",
+        # "Upgrade-Insecure-Requests": "1",
+        # "TE": "trailers",
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.100 Safari/537.36",
     }
 
     def __init__(self, url: str, web_id: str, session=requests.Session()):

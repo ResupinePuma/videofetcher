@@ -24,7 +24,7 @@ class TelegramNotifier:
         return f"|{greens}{emptys}| {percent*10}%"
 
     def set_progress_bar(self, percent=0):
-        msg = f"{self.progress_message}\nGetting video: \n{self.__draw_pb(percent)}"
+        msg = f"{self.progress_message}\n{self.__draw_pb(percent)}"
         self.bot.edit_message_text(
             msg,
             self.chat_id,

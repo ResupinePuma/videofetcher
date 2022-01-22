@@ -8,6 +8,7 @@ class PSession(requests.Session):
         self.working_proxy_list = []
         self.proxy_list = self.get_proxy_list()
         super().__init__()
+        #aiohttp.http.cookie._is_legal_key = lambda _: True
 
     def get_proxy_list(self):
         plist = requests.get("https://spys.me/proxy.txt")
@@ -45,7 +46,9 @@ class PSession(requests.Session):
             await queue.join()
             for task in tasks:
                 task.cancel()
-        asyncio.run(req(method, url, **kwargs))
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        loop.run_until_complete(req(method, url, **kwargs))
         return self.results
 
 
