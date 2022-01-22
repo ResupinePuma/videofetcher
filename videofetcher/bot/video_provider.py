@@ -47,6 +47,7 @@ class VideoProvider:
                 self.video_info = yt_downloader.extract_info(video_link, download=False)
             except:
                 raise UrlException()
+            notifier.set_progress_bar(100)
                 
             if (not text):
                 text = self.video_info.get('title', "")

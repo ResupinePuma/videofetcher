@@ -40,9 +40,9 @@ class TikTokDownloader:
     def get_video_url(self, notifier : TelegramNotifier) -> str:
         if len(re.findall(r'(.*tiktok\.com\/@.*\/live)', self.__url)) > 0:
             raise TiktokUrlException("Can't download tiktok live stream. Try another url")
-        for i in range(10):
-            notifier.set_progress_bar(i*10)
-            response = self.session.get(self.__url, headers=TikTokDownloader.HEADERS, timeout=8)
+        for i in range(4):
+            notifier.set_progress_bar(i*25)
+            response = self.session.get(self.__url, headers=TikTokDownloader.HEADERS, timeout=20)
             if not response:
                 self.session.cookies=CookieJar()
                 self.session.proxy_list = self.session.get_proxy_list()
@@ -52,8 +52,6 @@ class TikTokDownloader:
                 self.session.cookies=CookieJar()
                 self.session.proxy_list = self.session.get_proxy_list()
                 continue
-
-            notifier.set_progress_bar(100)
             return matches[0].replace(r'\u0026', '&').replace(r'\u002F', '/')
         raise TiktokUrlException()
     
