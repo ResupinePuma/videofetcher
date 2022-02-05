@@ -8,7 +8,7 @@ from config.bot_config import SPLASH_URL
 
 
 class TikTokDownloader:
-    def __init__(self, url: str, web_id: str):
+    def __init__(self, url: str):
         self.__url = url
         
     def get_video_url(self, notifier : TelegramNotifier) -> str:
