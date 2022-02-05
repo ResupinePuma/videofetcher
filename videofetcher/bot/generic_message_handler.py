@@ -1,6 +1,5 @@
 import logging
-import re, time
-
+import re
 
 from telegram.ext import MessageHandler, Filters
 
@@ -37,7 +36,8 @@ class GenericMessageHandler:
         )
         try:
             task_completed, status_msg = video_provider.process(video_link, reply_message.message_id, description)
-        except:
+        except Exception as ex:
+            print(ex)
             task_completed, status_msg = False, "Timeout. Try again"
         if task_completed:
             bot.delete_message(cid, original_message_id)
@@ -49,7 +49,6 @@ class GenericMessageHandler:
                     cid, video_link, status_msg
                 ),
             )
-            time.sleep(3)
             bot.delete_message(cid, reply_message.message_id)
             bot.send_message(cid,
                              "🆘 Looks like something went wrong. "

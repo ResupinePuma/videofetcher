@@ -11,3 +11,8 @@ services:
       #- /tmp/videofetcher:/code/output_dir
       - ./videofetcher:/code
 
+  splash:
+    image: scrapinghub/splash:3.5.0
+    mem_limit: 256m
+    command: --maxrss 2048 --max-timeout 300 --disable-lua-sandbox --verbosity 1
+    restart: unless-stopped

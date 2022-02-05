@@ -26,14 +26,11 @@ class VideoProvider:
         tiktok = re.findall(r"\/\/.*\.tiktok\.com\/",link)
 
         if len(tiktok) > 0:
-            tt = TikTokDownloader(link, str(random.randint(111111111111, 99999999999999)), proxies_session)            
-            res = tt.get_video_url(notifier)
-            #notifier.rm_progress_bar()
-            return "tiktok", res
+            tt = TikTokDownloader(link)            
+            return "tiktok", tt.get_video_url(notifier)
         return "any", link
 
-
-    @timeout_decorator.timeout(120, use_signals=False)
+    @timeout_decorator.timeout(50, use_signals=False)
     def process(self, video_link, update_message_id, text=""):
         notifier = TelegramNotifier(self.bot, self.chat_id, update_message_id)
         yt_downloader = yt.YoutubeDL({"socket_timeout": 10})
@@ -41,7 +38,6 @@ class VideoProvider:
         type = "any"
         
         try:
-            notifier.progress_update("‍🤖 processing video")
             type, video_link = self.__type_detect(video_link, notifier)
             try:
                 self.video_info = yt_downloader.extract_info(video_link, download=False)
@@ -54,7 +50,7 @@ class VideoProvider:
                 text = self.video_info.get('title', "")
                 if type == "tiktok":
                     text = src_link
-            
+            notifier.progress_update("‍🤖 processing video")
 
             for yt_video in self.yt_videos():
                 logging.info("Processing Video -> {}".format(yt_video.info.get("id")))
@@ -76,7 +72,7 @@ class VideoProvider:
                         video_file,
                         caption=text,
                         parse_mode=ParseMode.HTML,
-                        timeout=120,
+                        timeout=60,
                     )
         except FileIsTooLargeException as e:
             file_too_large_error = "[File Is Too Large] {}".format(str(e))
