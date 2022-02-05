@@ -22,5 +22,7 @@ class TikTokDownloader:
                 "headers" : [("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.81 Safari/537.36")]
             }, timeout=30)
             matches = re.findall(r'"playAddr":"([a-zA-Z0-9:.\/\\.:&-=?%_]*)"', response.text)
+            if len(matches) == 0:
+                continue
             return matches[0].replace(r'\u0026', '&').replace(r'\u002F', '/')
         raise TiktokUrlException()

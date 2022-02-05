@@ -4,7 +4,7 @@ import yt_dlp as yt
 import timeout_decorator
 from bot.tiktok import TikTokDownloader
 
-from bot.extraction_params import create_extraction_params, proxies_session
+from bot.extraction_params import create_extraction_params
 from bot.exceptions import *
 from bot.telegram_notifier import TelegramNotifier
 from telegram import ParseMode
@@ -30,7 +30,7 @@ class VideoProvider:
             return "tiktok", tt.get_video_url(notifier)
         return "any", link
 
-    @timeout_decorator.timeout(50, use_signals=False)
+    #@timeout_decorator.timeout(50, use_signals=False)
     def process(self, video_link, update_message_id, text=""):
         notifier = TelegramNotifier(self.bot, self.chat_id, update_message_id)
         yt_downloader = yt.YoutubeDL({"socket_timeout": 10})
@@ -38,11 +38,13 @@ class VideoProvider:
         type = "any"
         
         try:
+            notifier.progress_update("‍🤖 processing video")
             type, video_link = self.__type_detect(video_link, notifier)
             try:
                 self.video_info = yt_downloader.extract_info(video_link, download=False)
             except:
                 raise UrlException()
+            
             notifier.set_progress_bar(100)
             notifier.rm_progress_bar()
                 
@@ -50,7 +52,7 @@ class VideoProvider:
                 text = self.video_info.get('title', "")
                 if type == "tiktok":
                     text = src_link
-            notifier.progress_update("‍🤖 processing video")
+            
 
             for yt_video in self.yt_videos():
                 logging.info("Processing Video -> {}".format(yt_video.info.get("id")))
