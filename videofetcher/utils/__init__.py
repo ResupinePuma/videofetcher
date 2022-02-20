@@ -1,7 +1,23 @@
+import logging
+from .config_provider import tg_config, sys_config
+import time
 import json
 import os
-import time
 from datetime import datetime
+
+
+def init_logger():
+    handlers = [
+        logging.StreamHandler(),
+    ]
+
+    logging.basicConfig(
+        handlers=handlers,
+        format="%(asctime)s - %(filename)s:%(lineno)d - %(message)s",
+        datefmt="%Y-%m-%d %H:%M:%S",
+        level=sys_config("LOG_LEVEL"),
+    )
+    logging.captureWarnings(capture=True)
 
 
 def datetime_from_timestamp(unix_timestamp):

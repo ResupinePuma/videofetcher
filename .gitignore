@@ -1,0 +1,5 @@
+.devcontainer
+.vscode
+__pycache__
+*.ini
+*/*.ini
