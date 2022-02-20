@@ -18,7 +18,7 @@ class VideoProvider():
         for name, eng in engines.items():
             try:
                 res = eng.proceed(url, self.notifier, self.session)
-                if res.path or res.exception:
+                if res.path:
                     break
             except Exception as ex:
                 res.exception = ex
