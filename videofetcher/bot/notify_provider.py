@@ -8,7 +8,7 @@ class TelegramNotifier:
         self.update_message_id = update_message_id
         self.progress_message = ""
 
-    def progress_update(self, update_message):
+    def update_status(self, update_message):
         self.progress_message = update_message
         self.bot.edit_message_text(
             update_message,
@@ -23,7 +23,7 @@ class TelegramNotifier:
         emptys = "".join([EMPTY_TILE for f in range(10-percent)])
         return f"|{greens}{emptys}| {percent*10}%"
 
-    def set_progress_bar(self, percent=0):
+    def make_progress_bar(self, percent=0):
         msg = f"{self.progress_message}\n{self.__draw_pb(percent)}"
         self.bot.edit_message_text(
             msg,
@@ -32,7 +32,7 @@ class TelegramNotifier:
             disable_web_page_preview=True,
         )
 
-    def rm_progress_bar(self):
+    def remove_progress_bar(self):
         msg = f"{self.progress_message}"
         self.bot.edit_message_text(
             msg,
@@ -40,4 +40,3 @@ class TelegramNotifier:
             self.update_message_id,
             disable_web_page_preview=True,
         )
-
