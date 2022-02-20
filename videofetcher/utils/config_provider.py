@@ -22,7 +22,7 @@ def init_config():
     config.update(__default_config)
     if not os.path.exists("config.ini"):
         with open('config.ini', 'w') as configfile:
-            config.write(configfile)
+            configfile.write(config)
 
 def __config(key : str, group : str):
     c = configparser.ConfigParser()
