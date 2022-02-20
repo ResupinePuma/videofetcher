@@ -8,7 +8,7 @@ services:
     image: vf-bot
     restart: always
     volumes:
-      #- /tmp/videofetcher:/code/output_dir
+      - /tmp/videofetcher:/tmp
       - ./videofetcher:/code
 
   splash:

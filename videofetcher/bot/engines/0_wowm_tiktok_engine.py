@@ -74,7 +74,6 @@ class TiktokEngine(AbstractEngine):
             }, timeout=int(sys_config("PROCESSING_TIMEOUT")))
             self.notifier.make_progress_bar(50)
 
-
             matches = re.search(r'<a download=\"\" href=\"(.*)\" rel.*Download Video No Watermark \(SD\)', response.text, re.IGNORECASE)
             if matches:
                 video_url = matches.group(1).split('"')[0]
