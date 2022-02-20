@@ -39,7 +39,8 @@ class Ydl_Extractor():
         self.video_info = video.video_info
 
         allowed_file_size = int(sys_config("MAX_FILE_SIZE"))
-        if video.video_info.get('filesize_approx', 0) >> 20 > allowed_file_size:
+        filesize = int(video.video_info.get('filesize_approx', 0))
+        if filesize >> 20 > allowed_file_size:
             raise exceptions.FileIsTooLargeException("File size > {}Mb".format(allowed_file_size))
        
         ydl = ytd.YoutubeDL(extraction_param)
