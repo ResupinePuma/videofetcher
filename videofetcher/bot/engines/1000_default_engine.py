@@ -15,7 +15,7 @@ class Ydl_Extractor():
         self.filename = name
         return {
             "outtmpl": os.path.join(sys_config("VIDEO_FILE_FOLDER"), self.filename),
-            "format": "best[height<=960][ext=mp4],best[ext=unknown_video],bestvideo[height<=480][ext=mp4]+worstaudio[ext=m4a]",
+            "format": "best[height<=960][ext=mp4],best[ext=unknown_video],bestvideo[height<=480][ext=mp4]+worstaudio[ext=m4a],best[height<=960][ext=mp4],best[ext=unknown_video],worst[ext=mp4]",
             "socket_timeout": 10,
             "retries": 10,
             #"verbose" : True,

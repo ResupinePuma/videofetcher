@@ -33,9 +33,10 @@ def load_engines(engine_list: list = [] ):
     global engines
     engines.clear()
     engine_list.extend(get_engine_files())
-    engine_list = sorted(engine_list)
     for engine_data in engine_list:
+        pos = int(engine_data.split("_")[0])
         engine = load_engine(engine_data)
         if engine is not None:
-            engines[engine.name] = engine
-    return engines
+            engines[pos] = engine
+    sorted_engines = {k: engines[k] for k in sorted(engines)}
+    return sorted_engines
