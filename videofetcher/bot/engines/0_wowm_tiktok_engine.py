@@ -76,6 +76,7 @@ class TiktokEngine(AbstractEngine):
                 "url" : tt_url,
                 "http2" : 1,
                 "wait" : 5,
+                "js_source" : 'document.getElementsByClassName("chakra-textarea").item(0).remove();document.getElementsByClassName("css-1cexexp").item(0).remove()',
                 "headers" : [("user-agent", sys_config("USER_AGENT").replace('"',''))],
                 "response_body" : 1
             }, timeout=int(sys_config("PROCESSING_TIMEOUT")))
