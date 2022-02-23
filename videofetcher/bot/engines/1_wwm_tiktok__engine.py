@@ -25,7 +25,7 @@ class TiktokEngine(AbstractEngine):
     def proceed(self, url, notifier, session=requests.Session()) -> Video:
         self.notifier = notifier
         self.session = session
-        video = Video(url=url, name=url)
+        video = Video(url=url)
         if not self.consist_type(url):
             return video
 
