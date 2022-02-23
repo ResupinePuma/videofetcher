@@ -1,11 +1,12 @@
 from asyncio import exceptions
+from html import entities
 import logging, re
 
 from telegram.ext import MessageHandler, Filters
 
 from bot.video_provider import VideoProvider
 from bot.notify_provider import TelegramNotifier
-from telegram import ParseMode
+from telegram import MessageEntity, ParseMode
 import utils.exceptions as exs
 import time
 
@@ -49,7 +50,7 @@ class GenericMessageHandler:
 
         video = video_provider.process_video(video_link)
 
-        if not video.name or not video.path or video.exception:
+        if not video.path or video.exception:
             logging.exception(video.exception)
             notifier.update_status("Something went wrong 🤔")
             if type(video.exception) in [exs.DownloadError, exs.FileIsTooLargeException]:
@@ -64,12 +65,18 @@ class GenericMessageHandler:
 
         text = f"<a href='{video.url}'>{description if description else video.name}</a>"
         bot.send_chat_action(chat_id, "upload_video")
+
+        entities = [
+            MessageEntity('url',0,len(video.url),video.url)
+        ]
+        
         bot.send_video(
             chat_id,
             video_bytes,
-            caption=text,
-            parse_mode=ParseMode.HTML,
+            caption=f"{video.url}\n{video.name}",
+            caption_entities=entities,
             timeout=60,
+
         )
 
         bot.delete_message(chat_id, original_message_id)

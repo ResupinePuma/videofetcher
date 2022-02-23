@@ -2,6 +2,7 @@ import logging
 from bot.engines.abstract import Video, AbstractEngine
 from utils import exceptions, sys_config, format_size
 import re, requests, hashlib, os, random
+from urllib.parse import quote
 
 PHRASES = [
     "📞 Asking Xi's permission to download",
@@ -44,27 +45,33 @@ class TiktokEngine(AbstractEngine):
 
             self.notifier.update_status(random.choice(PHRASES))
 
-            video_url = None
-            self.notifier.make_progress_bar(0)
-            response = requests.post(f"{sys_config('SPLASH_URL')}/render.json", json={
-                "url" : url,
-                "http2" : 1,
-                "wait" : 2,
-                "headers" : [("user-agent", sys_config("USER_AGENT").replace('"',''))],
-                "response_body" : 1
-            }, timeout=int(sys_config("PROCESSING_TIMEOUT")))
+            video_url, video_id = None, None
+            for i in range(3):
+                self.notifier.make_progress_bar(i*10)
+                response = requests.post(f"{sys_config('SPLASH_URL')}/render.json", json={
+                    "url" : url,
+                    "http2" : 1,
+                    "wait" : 2,
+                    "headers" : [("user-agent", sys_config("USER_AGENT").replace('"',''))],
+                    "response_body" : 1
+                }, timeout=int(sys_config("PROCESSING_TIMEOUT")))
 
-            self.notifier.make_progress_bar(20)
-            logging.info("Got splash TT response: {}".format(response.text))
+                self.notifier.make_progress_bar(20)
+                logging.info("Got splash TT response: {}".format(response.text))
 
-            if "url" in response.json():
-                tt_url = response.json()['url']
-                id = re.findall(r"\/video\/([0-9]*)",tt_url)[-1]
-                self.notifier.make_progress_bar(30)
-            else:
+                if "url" in response.json():
+                    tt_url = response.json()['url']
+                    matches_id = re.search(r"\/video\/([0-9]*)",tt_url,re.IGNORECASE)
+                    if matches_id:
+                        video.name = response.json().get('title')
+                        video_id = matches_id.group(1)
+                        break
+
+            if not video_id:
                 raise exceptions.DownloadError("Can't download from url. Check if this url is correct")
+                
             
-            tt_url = f"https://godownloader.com/ru/tiktok-downloader?id={id}&link={url}"
+            tt_url = f"https://godownloader.com/ru/tiktok-downloader?id={video_id}&link={quote(url)}"
             response = requests.post(f"{sys_config('SPLASH_URL')}/render.html", json={
                 "url" : tt_url,
                 "http2" : 1,
@@ -92,7 +99,6 @@ class TiktokEngine(AbstractEngine):
                     f.write(response.content)
                 video.path = path
                 video.size = os.path.getsize(path)
-                video.name = url
             
             self.notifier.make_progress_bar(100)
         except Exception as ex:

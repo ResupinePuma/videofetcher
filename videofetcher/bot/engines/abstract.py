@@ -9,7 +9,7 @@ import requests, os
 
 @dataclasses.dataclass
 class Video():
-    name: str = None
+    name: str = ""
     url: str = None
     path: str = None
     exception: Exception = None

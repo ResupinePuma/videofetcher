@@ -72,7 +72,6 @@ class TiktokEngine(AbstractEngine):
                     f.write(response.content)
                 video.path = path
                 video.size = os.path.getsize(path)
-                video.name = url
             
             self.notifier.make_progress_bar(100)
         except Exception as ex:

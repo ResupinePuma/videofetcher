@@ -114,7 +114,7 @@ class DefaultEngine(AbstractEngine):
             self.notifier.make_progress_bar(0)
 
             for yt_video in self.get_videos():
-                video.name = yt_video.video_info.get("title", url)
+                video.name = yt_video.video_info.get("title")
                 video.video_info = yt_video.video_info
                 ydl_extractor = Ydl_Extractor(self.notifier)
 
