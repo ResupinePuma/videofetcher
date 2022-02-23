@@ -51,7 +51,7 @@ class TiktokEngine(AbstractEngine):
                 response = requests.post(f"{sys_config('SPLASH_URL')}/render.json", json={
                     "url" : url,
                     "http2" : 1,
-                    "wait" : 2,
+                    "wait" : 3,
                     "headers" : [("user-agent", sys_config("USER_AGENT").replace('"',''))],
                     "response_body" : 1
                 }, timeout=int(sys_config("PROCESSING_TIMEOUT")))
