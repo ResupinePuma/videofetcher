@@ -15,7 +15,8 @@ class VideoProvider():
 
     def process_video(self, url) -> Video:
         res = Video()
-        for name, eng in engines.items():
+        sorted_engines = {k: engines[k] for k in sorted(engines)}
+        for name, eng in sorted_engines.items():
             try:
                 res = eng.proceed(url, self.notifier, self.session)
                 if res.path:

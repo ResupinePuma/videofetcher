@@ -38,5 +38,4 @@ def load_engines(engine_list: list = [] ):
         engine = load_engine(engine_data)
         if engine is not None:
             engines[pos] = engine
-    sorted_engines = {k: engines[k] for k in sorted(engines)}
-    return sorted_engines
+    return engines
