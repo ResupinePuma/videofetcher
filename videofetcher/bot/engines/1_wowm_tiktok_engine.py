@@ -12,7 +12,7 @@ PHRASES = [
     "🔎 Searching video"
 ]
 
-class TiktokEngine(AbstractEngine):
+class TiktokEngine_wo_watermark2(AbstractEngine):
     def __init__(self) -> None:
         super().__init__()
 
