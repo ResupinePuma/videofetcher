@@ -1,6 +1,6 @@
 # Videofetcher - Simple telegram bot to fetch videos from social networks
 
-Bot uses yt-dlp library to fetch videos from [supported sites](https://ytdl-org.github.io/youtube-dl/supportedsites.html) and custom parsers for tiktok, pikabu etc.
+Bot uses [yt-dlp](https://github.com/yt-dlp/yt-dlp) library to fetch videos from [supported sites](https://ytdl-org.github.io/youtube-dl/supportedsites.html) and custom parsers for tiktok, pikabu etc.
 For avoiding captcha bot emutales human behavior via [splash](https://splash.readthedocs.io/en/stable/index.html).
 
 ### Deployment
