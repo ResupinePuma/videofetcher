@@ -49,9 +49,9 @@ class TiktokEngine(AbstractEngine):
             for i in range(3):
                 self.notifier.make_progress_bar(i*10)
 
-                tt_url = f"https://snaptik.app/ru"
+                tt_url = f"https://tikmate.online/?lang=nl"
                 response = requests.post(f"{sys_config('SPLASH_URL')}/execute", json={
-                    "url" : "https://snaptik.app/ru",
+                    "url" : "https://tikmate.online/?lang=nl",
                     "lua_source" : f"""
                     function main(splash, args)
                         splash:on_request(function(request)
@@ -60,8 +60,8 @@ class TiktokEngine(AbstractEngine):
                         splash:go(args.url)
                         assert(splash:wait(0.5))
                         splash:runjs('document.getElementsByName("url")[0].value="{url}";document.getElementsByTagName("form")[0].submit();')
-                        assert(splash:wait(1)) 
-                        local title = splash:evaljs('document.getElementsByClassName("snaptik-middle center")[0].children[1].innerText')                       
+                        assert(splash:wait(3)) 
+                        local title = splash:evaljs('document.getElementsByClassName("videotikmate-middle center")[0].children[1].innerText')                       
                         return {{
                             html = splash:html(),
                             title = title
@@ -75,7 +75,7 @@ class TiktokEngine(AbstractEngine):
                 if not html: 
                     continue  
 
-                matches_id = re.search(r'<a href="(.*)" onclick',html,re.IGNORECASE)
+                matches_id = re.search(r'<a onclick=".*" href="(.*)"',html,re.IGNORECASE)
                 if matches_id:
                     video_link = matches_id.group(1).split('"')[0]
                     video.name = response.json().get("title")
@@ -84,7 +84,7 @@ class TiktokEngine(AbstractEngine):
             if not video_link:              
                 raise exceptions.DownloadError("Can't download from url. Check if this url is correct")
             
-            response = self.session.get(video_link, timeout=10)
+            response = self.session.get("https://tikmate.online" + video_link, timeout=10)
             self.notifier.make_progress_bar(80)        
             if response.status_code < 400 and response.content:
                 path = self.get_downloaded_file_abspath(name_hash)
@@ -102,6 +102,5 @@ class TiktokEngine(AbstractEngine):
 
 def proceed(url, notifier, session) -> Video:
     return TiktokEngine().proceed(url, notifier, session)
-
 
 
