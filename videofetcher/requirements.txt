@@ -1,6 +1,7 @@
 requests
 telegram
 python-telegram-bot
+elasticsearch
 yt-dlp
 speedtest_cli
 timeout-decorator

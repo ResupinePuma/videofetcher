@@ -1,6 +1,8 @@
 from asyncio import exceptions
 from html import entities
 import logging, re
+from utils.config_provider import sys_config
+from utils.stats.dbwriter import Outputs
 
 from telegram.ext import MessageHandler, Filters
 
@@ -9,7 +11,9 @@ from bot.notify_provider import TelegramNotifier
 from telegram import MessageEntity, ParseMode
 import utils.exceptions as exs
 import time
+from utils.stats.staticstics import Output, Outputs
 
+stats_writer = Output(Outputs[sys_config("STATS_OUTPUT").upper()])
 
 def extract_url(text):
     ress = re.findall(r"(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})", text)
@@ -27,6 +31,7 @@ class GenericMessageHandler:
         dispatcher.add_handler(self.message_handler)
 
     @staticmethod
+    @stats_writer.record
     def create_video_provider(update, context):
         bot = context.bot
         chat_id = update.effective_chat.id
@@ -81,5 +86,5 @@ class GenericMessageHandler:
 
         bot.delete_message(chat_id, original_message_id)
         notifier.update_status("Done! ✅")
-        time.sleep(3)
+        time.sleep(2)
         bot.delete_message(chat_id, reply_message.message_id)

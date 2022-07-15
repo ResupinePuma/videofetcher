@@ -8,12 +8,20 @@ __default_config = {
     },
     'SYSTEM' : {
         'LOG_LEVEL' : 'INFO',
+        'STATS_OUTPUT' : "NONE",
         'VIDEO_FILE_FOLDER' : '/tmp',
         'PROCESSING_TIMEOUT' : '30',  #seconds
         'SPLASH_URL' : 'http://splash:8050',
         'MAX_FILE_SIZE' : '50',
         'PREFERRED_VIDEO_FORMAT' : "mp4",
         "USER_AGENT" : "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.81 Safari/537.36"
+    },
+    'ELASTICSEARCH' : {
+        "INDEX" : "messages",
+        "HOST" : "127.0.0.1:9200"
+    },
+    'JSON' : {
+        "PATH" : "./messages.ndjson",
     }
 }
 
@@ -22,7 +30,7 @@ def init_config():
     config.update(__default_config)
     if not os.path.exists("config.ini"):
         with open('config.ini', 'w') as configfile:
-            configfile.write(config)
+            config.write(configfile)
 
 def __config(key : str, group : str):
     c = configparser.ConfigParser()
@@ -35,3 +43,9 @@ def tg_config(key : str = "NONE"):
 
 def sys_config(key : str = "NONE"):
     return __config(key, "SYSTEM")
+
+def es_config(key : str = "NONE"):
+    return __config(key, "ELASTICSEARCH")
+
+def json_config(key : str = "NONE"):
+    return __config(key, "JSON")
