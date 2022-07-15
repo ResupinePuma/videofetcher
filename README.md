@@ -11,8 +11,11 @@ Run ```docker-compose up```, edit config.ini file (check videofetcher folder aft
 In addition add cleaner.sh to auto remove weekly downlaoded videos from temp folder.
 
 
+### Analytics
+
+Bot can write messages into console, ndjson file or elsticsearch. You must select what do you want in `config.ini`
+
 ### To-Do
 
 - proxy support
 - admin commands
-- analytics
